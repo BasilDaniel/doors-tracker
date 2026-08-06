@@ -1,112 +1,171 @@
 <!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1f4e78">
-  <meta name="description" content="Локальный каталог дверей DK с импортом и экспортом CSV">
-  <title>Каталог дверей DK</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/icon-192.png">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <header class="app-header">
-    <div>
-      <p class="eyebrow">PWA · локальные данные</p>
-      <h1>Каталог дверей DK</h1>
-    </div>
-    <button id="install-button" class="button button-secondary" hidden>Установить</button>
-  </header>
-
-  <nav class="app-nav" aria-label="Основная навигация">
-    <button class="nav-button is-active" data-screen="doors">Двери</button>
-    <button class="nav-button" data-screen="transfer">Импорт / экспорт</button>
-  </nav>
-
-  <main class="app-main">
-    <section id="screen-doors" class="screen is-active" aria-labelledby="doors-title">
-      <div class="toolbar">
-        <div class="search-wrap">
-          <label for="search-input">Поиск</label>
-          <input id="search-input" type="search" placeholder="DK, обозначение, зона, замок…" autocomplete="off">
-        </div>
-        <button id="add-door-button" class="button button-primary">Добавить дверь</button>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1f4e78" />
+    <meta
+      name="description"
+      content="Локальный каталог дверей DK с импортом и экспортом CSV"
+    />
+    <title>Каталог дверей DK</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">PWA · локальные данные</p>
+        <h1>Каталог дверей</h1>
       </div>
+      <button id="install-button" class="button button-secondary" hidden>
+        Установить
+      </button>
+    </header>
 
-      <div class="section-heading">
-        <h2 id="doors-title">Список дверей</h2>
-        <span id="doors-count" class="count-badge"></span>
-      </div>
-      <div id="doors-list" class="doors-list" aria-live="polite"></div>
-    </section>
+    <nav class="app-nav" aria-label="Основная навигация">
+      <button class="nav-button is-active" data-screen="doors">Двери</button>
+      <button class="nav-button" data-screen="transfer">
+        Импорт / экспорт
+      </button>
+    </nav>
 
-    <section id="screen-transfer" class="screen" aria-labelledby="transfer-title">
-      <div class="section-heading">
-        <h2 id="transfer-title">Импорт и экспорт CSV</h2>
-      </div>
-
-      <div class="transfer-grid">
-        <article class="panel">
-          <h3>Импорт</h3>
-          <p>Файл должен содержать заголовки, используемые в текущем CSV. Разделитель определяется автоматически.</p>
-          <label class="file-picker" for="csv-file-input">
-            <span>Выбрать CSV</span>
-            <input id="csv-file-input" type="file" accept=".csv,text/csv">
-          </label>
-          <div class="radio-group" role="radiogroup" aria-label="Режим импорта">
-            <label><input type="radio" name="import-mode" value="replace" checked> Заменить все данные</label>
-            <label><input type="radio" name="import-mode" value="merge"> Добавить и обновить по DK</label>
+    <main class="app-main">
+      <section
+        id="screen-doors"
+        class="screen is-active"
+        aria-labelledby="doors-title"
+      >
+        <div class="toolbar">
+          <div class="search-wrap">
+            <label for="search-input">Поиск</label>
+            <input
+              id="search-input"
+              type="search"
+              placeholder="DK, обозначение, зона, замок…"
+              autocomplete="off"
+            />
           </div>
-          <button id="import-button" class="button button-primary" disabled>Импортировать</button>
-          <p id="import-status" class="status-text" role="status"></p>
-        </article>
+          <button id="add-door-button" class="button button-primary">
+            Добавить дверь
+          </button>
+        </div>
 
-        <article class="panel">
-          <h3>Экспорт</h3>
-          <p>Экспортируется весь каталог в CSV UTF-8 с разделителем «;».</p>
-          <button id="export-button" class="button button-primary">Скачать CSV</button>
-        </article>
+        <div class="section-heading">
+          <h2 id="doors-title">Список дверей</h2>
+          <span id="doors-count" class="count-badge"></span>
+        </div>
+        <div id="doors-list" class="doors-list" aria-live="polite"></div>
+      </section>
 
-        <article class="panel panel-warning">
-          <h3>Сброс данных</h3>
-          <p>Удаляет локальные изменения и возвращает исходный список.</p>
-          <button id="reset-button" class="button button-danger">Восстановить исходные данные</button>
-        </article>
-      </div>
-    </section>
-  </main>
+      <section
+        id="screen-transfer"
+        class="screen"
+        aria-labelledby="transfer-title"
+      >
+        <div class="section-heading">
+          <h2 id="transfer-title">Импорт и экспорт CSV</h2>
+        </div>
 
-  <dialog id="door-dialog" class="door-dialog">
-    <form id="door-form" method="dialog">
-      <div class="dialog-header">
-        <h2 id="dialog-title">Дверь</h2>
-        <button id="close-dialog-button" class="icon-button" type="button" aria-label="Закрыть">×</button>
-      </div>
-      <input id="door-id" type="hidden">
-      <div id="door-form-fields" class="form-grid"></div>
-      <div class="dialog-actions">
-        <button class="button button-secondary" type="button" id="cancel-door-button">Отмена</button>
-        <button class="button button-primary" type="submit">Сохранить</button>
-      </div>
-    </form>
-  </dialog>
+        <div class="transfer-grid">
+          <article class="panel">
+            <h3>Импорт</h3>
+            <p>
+              Файл должен содержать заголовки, используемые в текущем CSV.
+              Разделитель определяется автоматически.
+            </p>
+            <label class="file-picker" for="csv-file-input">
+              <span>Выбрать CSV</span>
+              <input id="csv-file-input" type="file" accept=".csv,text/csv" />
+            </label>
+            <div
+              class="radio-group"
+              role="radiogroup"
+              aria-label="Режим импорта"
+            >
+              <label
+                ><input
+                  type="radio"
+                  name="import-mode"
+                  value="replace"
+                  checked
+                />
+                Заменить все данные</label
+              >
+              <label
+                ><input type="radio" name="import-mode" value="merge" />
+                Добавить и обновить по DK</label
+              >
+            </div>
+            <button id="import-button" class="button button-primary" disabled>
+              Импортировать
+            </button>
+            <p id="import-status" class="status-text" role="status"></p>
+          </article>
 
-  <dialog id="confirm-dialog" class="confirm-dialog">
-    <form method="dialog">
-      <h2 id="confirm-title">Подтверждение</h2>
-      <p id="confirm-message"></p>
-      <div class="dialog-actions">
-        <button class="button button-secondary" value="cancel">Отмена</button>
-        <button class="button button-danger" value="confirm">Удалить</button>
-      </div>
-    </form>
-  </dialog>
+          <article class="panel">
+            <h3>Экспорт</h3>
+            <p>Экспортируется весь каталог в CSV UTF-8 с разделителем «;».</p>
+            <button id="export-button" class="button button-primary">
+              Скачать CSV
+            </button>
+          </article>
 
-  <script src="seed-data.js"></script>
-  <script src="storage.js"></script>
-  <script src="csv.js"></script>
-  <script src="dom.js"></script>
-  <script src="app.js"></script>
-</body>
+          <article class="panel panel-warning">
+            <h3>Сброс данных</h3>
+            <p>Удаляет локальные изменения и возвращает исходный список.</p>
+            <button id="reset-button" class="button button-danger">
+              Восстановить исходные данные
+            </button>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="door-dialog" class="door-dialog">
+      <form id="door-form" method="dialog">
+        <div class="dialog-header">
+          <h2 id="dialog-title">Дверь</h2>
+          <button
+            id="close-dialog-button"
+            class="icon-button"
+            type="button"
+            aria-label="Закрыть"
+          >
+            ×
+          </button>
+        </div>
+        <input id="door-id" type="hidden" />
+        <div id="door-form-fields" class="form-grid"></div>
+        <div class="dialog-actions">
+          <button
+            class="button button-secondary"
+            type="button"
+            id="cancel-door-button"
+          >
+            Отмена
+          </button>
+          <button class="button button-primary" type="submit">Сохранить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="confirm-dialog" class="confirm-dialog">
+      <form method="dialog">
+        <h2 id="confirm-title">Подтверждение</h2>
+        <p id="confirm-message"></p>
+        <div class="dialog-actions">
+          <button class="button button-secondary" value="cancel">Отмена</button>
+          <button class="button button-danger" value="confirm">Удалить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="seed-data.js"></script>
+    <script src="storage.js"></script>
+    <script src="csv.js"></script>
+    <script src="dom.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
