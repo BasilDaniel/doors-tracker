@@ -51,6 +51,14 @@ button {
   margin: 2px 0 0;
   font-size: clamp(1.45rem, 3vw, 2.2rem);
 }
+.app-version {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.48em;
+  font-weight: 600;
+  opacity: 0.72;
+  vertical-align: middle;
+}
 .eyebrow {
   margin: 0;
   opacity: 0.78;

@@ -1,4 +1,6 @@
 (() => {
+  const APP_VERSION = "1.6.0";
+
   let doors = Storage.load();
   let selectedFile = null;
   let deferredInstallPrompt = null;
@@ -195,6 +197,9 @@
 
   function init() {
     Dom.cache();
+
+    // Показывает текущую версию приложения в заголовке.
+    Dom.elements["app-version"].textContent = `v${APP_VERSION}`;
     Dom.buildForm();
     bindEvents();
     render();
