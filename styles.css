@@ -101,6 +101,9 @@ button {
 .search-wrap {
   flex: 1;
 }
+.status-filter-wrap {
+  width: min(220px, 28vw);
+}
 label {
   font-weight: 650;
 }
@@ -403,7 +406,8 @@ textarea:focus {
     align-items: stretch;
     flex-direction: column;
   }
-  .toolbar .button {
+  .toolbar .button,
+  .status-filter-wrap {
     width: 100%;
   }
   .door-summary {

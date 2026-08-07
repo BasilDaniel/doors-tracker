@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1f4e78" />
     <meta
       name="description"
-      content="Локальный каталог дверей с импортом и экспортом CSV"
+      content="Локальный каталог дверей DK с импортом и экспортом CSV"
     />
     <title>Каталог дверей DK</title>
     <link rel="manifest" href="manifest.webmanifest" />
@@ -17,7 +17,7 @@
     <header class="app-header">
       <div>
         <p class="eyebrow">PWA · локальные данные</p>
-        <h1>Каталог дверей</h1>
+        <h1>Каталог дверей DK</h1>
       </div>
       <button id="install-button" class="button button-secondary" hidden>
         Установить
@@ -46,6 +46,16 @@
               placeholder="DK, обозначение, зона, замок…"
               autocomplete="off"
             />
+          </div>
+          <div class="status-filter-wrap">
+            <label for="status-filter">Статус</label>
+            <select id="status-filter">
+              <option value="all">Все статусы</option>
+              <option value="">Не указан</option>
+              <option value="Готово">Готово</option>
+              <option value="Монтаж">Монтаж</option>
+              <option value="Тестирование">Тестирование</option>
+            </select>
           </div>
           <button id="add-door-button" class="button button-primary">
             Добавить дверь

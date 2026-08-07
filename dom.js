@@ -46,6 +46,7 @@ const Dom = (() => {
       "doors-list",
       "doors-count",
       "search-input",
+      "status-filter",
       "add-door-button",
       "door-dialog",
       "door-form",

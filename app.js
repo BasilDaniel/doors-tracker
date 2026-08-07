@@ -3,24 +3,35 @@
   let selectedFile = null;
   let deferredInstallPrompt = null;
 
-  // Поиск ведётся сразу по всем полям двери.
+  // Одновременно применяет текстовый поиск и выбранный статус.
   function getFilteredDoors() {
     const query = Dom.elements["search-input"].value
       .trim()
       .toLocaleLowerCase("ru");
-    if (!query) return doors;
-    return doors.filter((door) =>
-      Object.values(door).some((value) =>
-        String(value).toLocaleLowerCase("ru").includes(query),
-      ),
-    );
+    const status = Dom.elements["status-filter"].value;
+
+    return doors.filter((door) => {
+      const matchesSearch =
+        !query ||
+        Object.values(door).some((value) =>
+          String(value).toLocaleLowerCase("ru").includes(query),
+        );
+
+      // all означает отсутствие фильтра, пустая строка — двери без статуса.
+      const matchesStatus = status === "all" || (door.status || "") === status;
+      return matchesSearch && matchesStatus;
+    });
   }
 
   // Обновляет список и сохраняет единый порядок по номеру DK.
   function render() {
     const sorted = [...getFilteredDoors()].sort((a, b) => {
-      const aNumber = Number(a.dk.match(/\d+/)?.[0] || Number.MAX_SAFE_INTEGER);
-      const bNumber = Number(b.dk.match(/\d+/)?.[0] || Number.MAX_SAFE_INTEGER);
+      const aNumber = Number(
+        (a.dk || "").match(/\d+/)?.[0] || Number.MAX_SAFE_INTEGER,
+      );
+      const bNumber = Number(
+        (b.dk || "").match(/\d+/)?.[0] || Number.MAX_SAFE_INTEGER,
+      );
       const aName = a.dk || a.designation || "";
       const bName = b.dk || b.designation || "";
       return aNumber - bNumber || aName.localeCompare(bName, "ru");
@@ -125,6 +136,7 @@
         ),
       );
     Dom.elements["search-input"].addEventListener("input", render);
+    Dom.elements["status-filter"].addEventListener("change", render);
     Dom.elements["add-door-button"].addEventListener("click", () =>
       Dom.openDoorDialog(),
     );
