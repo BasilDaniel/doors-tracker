@@ -30,7 +30,8 @@ body {
 }
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 button {
@@ -104,7 +105,8 @@ label {
   font-weight: 650;
 }
 input,
-select {
+select,
+textarea {
   width: 100%;
   min-height: 44px;
   margin-top: 6px;
@@ -115,7 +117,8 @@ select {
   border-radius: 10px;
 }
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: 3px solid rgba(31, 78, 120, 0.18);
   border-color: var(--brand);
 }
@@ -263,6 +266,15 @@ select:focus {
 .door-empty-details {
   margin: 0;
   color: var(--muted);
+}
+.door-notes {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  padding: 10px 12px;
+  color: var(--text);
+  background: #fff8e6;
+  border-radius: 8px;
+  white-space: pre-wrap;
 }
 .card-actions {
   display: flex;

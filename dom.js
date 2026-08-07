@@ -1,6 +1,6 @@
 const Dom = (() => {
   const fieldConfig = [
-    { key: "dk", label: "DK", required: true },
+    { key: "dk", label: "DK" },
     { key: "designation", label: "Обозначение двери" },
     {
       key: "status",
@@ -35,6 +35,7 @@ const Dom = (() => {
       options: ["", "RS — fail safe", "AS — fail secure"],
     },
     { key: "panic", label: "Паника / эвакуация", wide: true },
+    { key: "notes", label: "Notes", type: "textarea", wide: true },
   ];
 
   const elements = {};
@@ -141,6 +142,14 @@ const Dom = (() => {
           .filter(Boolean),
       );
 
+      // Notes выводятся отдельным блоком, чтобы длинный текст не смешивался с тегами.
+      if (door.notes) {
+        const notes = document.createElement("p");
+        notes.className = "door-notes";
+        notes.textContent = door.notes;
+        details.append(notes);
+      }
+
       if (!location.childElementCount && !details.childElementCount) {
         const emptyDetails = document.createElement("p");
         emptyDetails.className = "door-empty-details";
@@ -186,6 +195,9 @@ const Dom = (() => {
           option.textContent = value || "Без значения";
           control.append(option);
         });
+      } else if (field.type === "textarea") {
+        control = document.createElement("textarea");
+        control.rows = 3;
       } else {
         control = document.createElement("input");
         control.type = "text";
@@ -201,8 +213,9 @@ const Dom = (() => {
   function openDoorDialog(door = null) {
     elements["door-form"].reset();
     elements["door-id"].value = door?.id || "";
+    const title = door?.dk || door?.designation || "двери";
     elements["dialog-title"].textContent = door
-      ? `Редактирование ${door.dk}`
+      ? `Редактирование ${title}`
       : "Новая дверь";
     fieldConfig.forEach((field) => {
       elements["door-form"].elements[field.key].value = door?.[field.key] || "";

@@ -10,6 +10,7 @@ const Csv = (() => {
     ["Защёлка", "latch"],
     ["Режим работы", "mode"],
     ["Паника / эвакуация", "panic"],
+    ["Notes", "notes"],
   ];
 
   // Выбирает наиболее вероятный разделитель по первой строке.
@@ -66,8 +67,11 @@ const Csv = (() => {
     const indexByKey = Object.fromEntries(
       columns.map(([title, key]) => [key, header.indexOf(title)]),
     );
-    if (indexByKey.dk === -1)
-      throw new Error("Не найдена обязательная колонка «DK».");
+    if (indexByKey.dk === -1 && indexByKey.designation === -1) {
+      throw new Error(
+        "Нужна хотя бы одна колонка: «DK» или «Обозначение двери».",
+      );
+    }
 
     return rows
       .slice(1)
@@ -83,7 +87,7 @@ const Csv = (() => {
         });
         return door;
       })
-      .filter((door) => door.dk);
+      .filter((door) => door.dk || door.designation);
   }
 
   // Экранирует значение для безопасной записи в CSV.

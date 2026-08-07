@@ -21,7 +21,9 @@
     const sorted = [...getFilteredDoors()].sort((a, b) => {
       const aNumber = Number(a.dk.match(/\d+/)?.[0] || Number.MAX_SAFE_INTEGER);
       const bNumber = Number(b.dk.match(/\d+/)?.[0] || Number.MAX_SAFE_INTEGER);
-      return aNumber - bNumber || a.dk.localeCompare(b.dk, "ru");
+      const aName = a.dk || a.designation || "";
+      const bName = b.dk || b.designation || "";
+      return aNumber - bNumber || aName.localeCompare(bName, "ru");
     });
     Dom.renderDoors(sorted, { onEdit: editDoor, onDelete: deleteDoor });
   }
@@ -34,7 +36,7 @@
   async function deleteDoor(door) {
     const accepted = await Dom.confirm(
       "Удалить дверь?",
-      `${door.dk || "Эта дверь"} будет удалена без возможности отмены.`,
+      `${door.dk || door.designation || "Эта дверь"} будет удалена без возможности отмены.`,
     );
     if (!accepted) return;
     doors = doors.filter((item) => item.id !== door.id);
@@ -46,13 +48,27 @@
   function saveDoor(event) {
     event.preventDefault();
     const door = Dom.readDoorForm();
-    const duplicate = doors.find(
-      (item) =>
-        item.dk.toLocaleLowerCase("ru") === door.dk.toLocaleLowerCase("ru") &&
-        item.id !== door.id,
-    );
+    // У записи должен быть хотя бы DK или designation.
+    if (!door.dk && !door.designation) {
+      alert("Укажите DK или designation.");
+      return;
+    }
+
+    // Проверяет дубликаты только по заполненному идентификатору.
+    const duplicate = doors.find((item) => {
+      if (item.id === door.id) return false;
+      if (door.dk)
+        return (
+          item.dk?.toLocaleLowerCase("ru") === door.dk.toLocaleLowerCase("ru")
+        );
+      return (
+        !item.dk &&
+        item.designation?.toLocaleLowerCase("ru") ===
+          door.designation.toLocaleLowerCase("ru")
+      );
+    });
     if (duplicate) {
-      alert(`Дверь ${door.dk} уже существует.`);
+      alert(`Запись ${door.dk || door.designation} уже существует.`);
       return;
     }
     const index = doors.findIndex((item) => item.id === door.id);
@@ -74,15 +90,18 @@
       if (mode === "replace") {
         doors = imported;
       } else {
-        const byDk = new Map(
-          doors.map((door) => [door.dk.toLocaleLowerCase("ru"), door]),
-        );
+        // Для записей без DK ключом служит designation.
+        const getKey = (door) =>
+          door.dk
+            ? `dk:${door.dk.toLocaleLowerCase("ru")}`
+            : `designation:${door.designation.toLocaleLowerCase("ru")}`;
+        const byKey = new Map(doors.map((door) => [getKey(door), door]));
         imported.forEach((door) => {
-          const key = door.dk.toLocaleLowerCase("ru");
-          const existing = byDk.get(key);
-          byDk.set(key, existing ? { ...door, id: existing.id } : door);
+          const key = getKey(door);
+          const existing = byKey.get(key);
+          byKey.set(key, existing ? { ...door, id: existing.id } : door);
         });
-        doors = [...byDk.values()];
+        doors = [...byKey.values()];
       }
       Storage.save(doors);
       Dom.elements["import-status"].textContent =
