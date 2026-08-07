@@ -64,6 +64,7 @@ const Dom = (() => {
       "export-button",
       "reset-button",
       "install-button",
+      "app-version",
     ].forEach((id) => {
       elements[id] = document.getElementById(id);
     });
