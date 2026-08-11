@@ -1,4 +1,4 @@
-const CACHE_NAME = "doors-pwa-v10";
+const CACHE_NAME = "doors-pwa-v11";
 
 const APP_FILES = [
   "./",
@@ -14,56 +14,41 @@ const APP_FILES = [
   "./icons/icon-512.png",
 ];
 
-// Предварительно сохраняет файлы приложения.
+// Предварительно кэширует оболочку приложения для офлайн-работы.
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(APP_FILES);
-    }),
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES)),
   );
-
-  // Новая версия не ждёт закрытия старой.
   self.skipWaiting();
 });
 
-// Удаляет старые версии кэша.
+// Удаляет старые версии кэша после обновления приложения.
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key)),
-      );
-    }),
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter((key) => key !== CACHE_NAME)
+            .map((key) => caches.delete(key)),
+        ),
+      ),
   );
-
-  // Новый worker сразу начинает
-  // управлять открытыми страницами.
   self.clients.claim();
 });
 
-// Для файлов приложения сначала используется сеть.
-// Если сеть недоступна — используется кэш.
+// Сначала обращается к сети, а при ошибке использует кэш.
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") {
-    return;
-  }
+  if (event.request.method !== "GET") return;
 
   event.respondWith(
     fetch(event.request)
       .then((response) => {
         const copy = response.clone();
-
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, copy);
-        });
-
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         return response;
       })
-
-      .catch(() => {
-        return caches.match(event.request);
-      }),
+      .catch(() => caches.match(event.request)),
   );
 });

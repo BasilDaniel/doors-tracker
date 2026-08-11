@@ -88,6 +88,16 @@ button {
   color: white;
   background: var(--brand);
 }
+.filter-toggle {
+  margin-right: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.filter-toggle.is-active {
+  color: white;
+  border-color: var(--brand);
+  background: var(--brand);
+}
 
 .app-main {
   width: min(1280px, 100%);
@@ -100,17 +110,26 @@ button {
 .screen.is-active {
   display: block;
 }
-.toolbar {
-  display: flex;
-  align-items: end;
+.filters-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) repeat(3, minmax(160px, 220px));
   gap: 14px;
+  align-items: end;
   margin-bottom: 22px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
-.search-wrap {
-  flex: 1;
+.filters-panel[hidden] {
+  display: none;
 }
-.filter-wrap {
-  width: min(220px, 28vw);
+.filter-search {
+  min-width: 0;
+}
+.filter-field {
+  min-width: 0;
 }
 label {
   font-weight: 650;
@@ -219,19 +238,18 @@ textarea:focus {
   min-width: 0;
 }
 .door-heading h3 {
-  margin: 0;
+  margin: 0 0 3px;
   font-size: 1.08rem;
+}
+.door-heading p {
+  margin: 0;
   overflow: hidden;
+  color: var(--muted);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.door-status-wrap {
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
 .door-status {
+  justify-self: end;
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 0.82rem;
@@ -411,12 +429,11 @@ textarea:focus {
   .app-nav {
     overflow-x: auto;
   }
-  .toolbar {
-    align-items: stretch;
-    flex-direction: column;
+  .filters-panel {
+    grid-template-columns: 1fr;
+    padding: 14px;
   }
-  .toolbar .button,
-  .filter-wrap {
+  .filter-field {
     width: 100%;
   }
   .door-summary {
