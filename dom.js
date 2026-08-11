@@ -47,7 +47,9 @@ const Dom = (() => {
       "doors-count",
       "search-input",
       "status-filter",
+      "zone-filter",
       "add-door-button",
+      "app-version",
       "door-dialog",
       "door-form",
       "door-id",
@@ -64,7 +66,6 @@ const Dom = (() => {
       "export-button",
       "reset-button",
       "install-button",
-      "app-version",
     ].forEach((id) => {
       elements[id] = document.getElementById(id);
     });
@@ -119,12 +120,26 @@ const Dom = (() => {
       const heading = document.createElement("div");
       heading.className = "door-heading";
       const title = document.createElement("h3");
-      title.textContent = door.dk || "Без DK";
-      const designation = document.createElement("p");
-      designation.textContent = door.designation || "Обозначение не указано";
-      heading.append(title, designation);
+      const dkText = door.dk || "Без DK";
+      const designationText = door.designation || "Обозначение не указано";
+      title.textContent = `${dkText} · ${designationText}`;
+      heading.append(title);
 
-      summary.append(heading, makeStatus(door.status));
+      const statusWrap = document.createElement("div");
+      statusWrap.className = "door-status-wrap";
+      statusWrap.append(makeStatus(door.status));
+
+      // Если есть Notes, показывает предупреждение рядом со статусом.
+      if (door.notes) {
+        const noteMark = document.createElement("span");
+        noteMark.className = "notes-warning";
+        noteMark.textContent = "!";
+        noteMark.title = "Есть примечание";
+        noteMark.setAttribute("aria-label", "Есть примечание");
+        statusWrap.append(noteMark);
+      }
+
+      summary.append(heading, statusWrap);
 
       // Остальные параметры и действия показываются после раскрытия карточки.
       const body = document.createElement("div");

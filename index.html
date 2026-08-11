@@ -49,7 +49,16 @@
               autocomplete="off"
             />
           </div>
-          <div class="status-filter-wrap">
+          <div class="filter-wrap">
+            <label for="zone-filter">Зона</label>
+            <select id="zone-filter">
+              <option value="all">Все зоны</option>
+              <option value="">Не указана</option>
+              <option value="Офисное здание">Офисное здание</option>
+              <option value="Цех">Цех</option>
+            </select>
+          </div>
+          <div class="filter-wrap">
             <label for="status-filter">Статус</label>
             <select id="status-filter">
               <option value="all">Все статусы</option>
@@ -59,9 +68,6 @@
               <option value="Тестирование">Тестирование</option>
             </select>
           </div>
-          <button id="add-door-button" class="button button-primary">
-            Добавить дверь
-          </button>
         </div>
 
         <div class="section-heading">
@@ -78,6 +84,9 @@
       >
         <div class="section-heading">
           <h2 id="transfer-title">Импорт и экспорт CSV</h2>
+          <button id="add-door-button" class="button button-primary">
+            Добавить дверь
+          </button>
         </div>
 
         <div class="transfer-grid">

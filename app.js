@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "1.6.0";
+  const APP_VERSION = "1.7.0";
 
   let doors = Storage.load();
   let selectedFile = null;
@@ -11,6 +11,7 @@
       .trim()
       .toLocaleLowerCase("ru");
     const status = Dom.elements["status-filter"].value;
+    const zone = Dom.elements["zone-filter"].value;
 
     return doors.filter((door) => {
       const matchesSearch =
@@ -21,7 +22,8 @@
 
       // all означает отсутствие фильтра, пустая строка — двери без статуса.
       const matchesStatus = status === "all" || (door.status || "") === status;
-      return matchesSearch && matchesStatus;
+      const matchesZone = zone === "all" || (door.zone || "") === zone;
+      return matchesSearch && matchesStatus && matchesZone;
     });
   }
 
@@ -139,6 +141,7 @@
       );
     Dom.elements["search-input"].addEventListener("input", render);
     Dom.elements["status-filter"].addEventListener("change", render);
+    Dom.elements["zone-filter"].addEventListener("change", render);
     Dom.elements["add-door-button"].addEventListener("click", () =>
       Dom.openDoorDialog(),
     );
@@ -199,7 +202,8 @@
     Dom.cache();
 
     // Показывает текущую версию приложения в заголовке.
-    Dom.elements["app-version"].textContent = `v${APP_VERSION}`;
+    if (Dom.elements["app-version"])
+      Dom.elements["app-version"].textContent = `v${APP_VERSION}`;
     Dom.buildForm();
     bindEvents();
     render();

@@ -109,7 +109,7 @@ button {
 .search-wrap {
   flex: 1;
 }
-.status-filter-wrap {
+.filter-wrap {
   width: min(220px, 28vw);
 }
 label {
@@ -219,18 +219,19 @@ textarea:focus {
   min-width: 0;
 }
 .door-heading h3 {
-  margin: 0 0 3px;
-  font-size: 1.08rem;
-}
-.door-heading p {
   margin: 0;
+  font-size: 1.08rem;
   overflow: hidden;
-  color: var(--muted);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.door-status {
+.door-status-wrap {
   justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.door-status {
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 0.82rem;
@@ -415,7 +416,7 @@ textarea:focus {
     flex-direction: column;
   }
   .toolbar .button,
-  .status-filter-wrap {
+  .filter-wrap {
     width: 100%;
   }
   .door-summary {
