@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "1.7.0";
+  const APP_VERSION = "1.8.1";
 
   let doors = Storage.load();
   let selectedFile = null;
@@ -12,6 +12,7 @@
       .toLocaleLowerCase("ru");
     const status = Dom.elements["status-filter"].value;
     const zone = Dom.elements["zone-filter"].value;
+    const notes = Dom.elements["notes-filter"].value;
 
     return doors.filter((door) => {
       const matchesSearch =
@@ -23,7 +24,10 @@
       // all означает отсутствие фильтра, пустая строка — двери без статуса.
       const matchesStatus = status === "all" || (door.status || "") === status;
       const matchesZone = zone === "all" || (door.zone || "") === zone;
-      return matchesSearch && matchesStatus && matchesZone;
+      const hasNotes = Boolean((door.notes || "").trim());
+      const matchesNotes =
+        notes === "all" || (notes === "with" ? hasNotes : !hasNotes);
+      return matchesSearch && matchesStatus && matchesZone && matchesNotes;
     });
   }
 
@@ -63,24 +67,21 @@
   function saveDoor(event) {
     event.preventDefault();
     const door = Dom.readDoorForm();
-    // У записи должен быть хотя бы DK или designation.
-    if (!door.dk && !door.designation) {
-      alert("Укажите DK или designation.");
-      return;
-    }
-
-    // Проверяет дубликаты только по заполненному идентификатору.
+    // Проверяет дубликаты только когда заполнен DK или designation.
     const duplicate = doors.find((item) => {
       if (item.id === door.id) return false;
       if (door.dk)
         return (
           item.dk?.toLocaleLowerCase("ru") === door.dk.toLocaleLowerCase("ru")
         );
-      return (
-        !item.dk &&
-        item.designation?.toLocaleLowerCase("ru") ===
-          door.designation.toLocaleLowerCase("ru")
-      );
+      if (door.designation) {
+        return (
+          !item.dk &&
+          item.designation?.toLocaleLowerCase("ru") ===
+            door.designation.toLocaleLowerCase("ru")
+        );
+      }
+      return false;
     });
     if (duplicate) {
       alert(`Запись ${door.dk || door.designation} уже существует.`);
@@ -105,11 +106,13 @@
       if (mode === "replace") {
         doors = imported;
       } else {
-        // Для записей без DK ключом служит designation.
-        const getKey = (door) =>
-          door.dk
-            ? `dk:${door.dk.toLocaleLowerCase("ru")}`
-            : `designation:${door.designation.toLocaleLowerCase("ru")}`;
+        // Для записей без DK ключом служит designation, а полностью безымянные записи остаются отдельными.
+        const getKey = (door) => {
+          if (door.dk) return `dk:${door.dk.toLocaleLowerCase("ru")}`;
+          if (door.designation)
+            return `designation:${door.designation.toLocaleLowerCase("ru")}`;
+          return `id:${door.id}`;
+        };
         const byKey = new Map(doors.map((door) => [getKey(door), door]));
         imported.forEach((door) => {
           const key = getKey(door);
@@ -142,6 +145,7 @@
     Dom.elements["search-input"].addEventListener("input", render);
     Dom.elements["status-filter"].addEventListener("change", render);
     Dom.elements["zone-filter"].addEventListener("change", render);
+    Dom.elements["notes-filter"].addEventListener("change", render);
     Dom.elements["add-door-button"].addEventListener("click", () =>
       Dom.openDoorDialog(),
     );

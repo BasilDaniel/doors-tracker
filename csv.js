@@ -73,21 +73,18 @@ const Csv = (() => {
       );
     }
 
-    return rows
-      .slice(1)
-      .map((row, index) => {
-        const door = {
-          id: crypto.randomUUID
-            ? crypto.randomUUID()
-            : `door-${Date.now()}-${index}`,
-        };
-        columns.forEach(([, key]) => {
-          const columnIndex = indexByKey[key];
-          door[key] = columnIndex >= 0 ? (row[columnIndex] || "").trim() : "";
-        });
-        return door;
-      })
-      .filter((door) => door.dk || door.designation);
+    return rows.slice(1).map((row, index) => {
+      const door = {
+        id: crypto.randomUUID
+          ? crypto.randomUUID()
+          : `door-${Date.now()}-${index}`,
+      };
+      columns.forEach(([, key]) => {
+        const columnIndex = indexByKey[key];
+        door[key] = columnIndex >= 0 ? (row[columnIndex] || "").trim() : "";
+      });
+      return door;
+    });
   }
 
   // Экранирует значение для безопасной записи в CSV.

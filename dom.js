@@ -48,6 +48,7 @@ const Dom = (() => {
       "search-input",
       "status-filter",
       "zone-filter",
+      "notes-filter",
       "add-door-button",
       "app-version",
       "door-dialog",
@@ -120,9 +121,9 @@ const Dom = (() => {
       const heading = document.createElement("div");
       heading.className = "door-heading";
       const title = document.createElement("h3");
-      const dkText = door.dk || "Без DK";
-      const designationText = door.designation || "Обозначение не указано";
-      title.textContent = `${dkText} · ${designationText}`;
+      // Если DK и designation не заполнены, показывает прочерк.
+      title.textContent =
+        [door.dk, door.designation].filter(Boolean).join(" · ") || "—";
       heading.append(title);
 
       const statusWrap = document.createElement("div");
@@ -230,7 +231,7 @@ const Dom = (() => {
   function openDoorDialog(door = null) {
     elements["door-form"].reset();
     elements["door-id"].value = door?.id || "";
-    const title = door?.dk || door?.designation || "двери";
+    const title = door?.dk || door?.designation || "—";
     elements["dialog-title"].textContent = door
       ? `Редактирование ${title}`
       : "Новая дверь";

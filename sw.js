@@ -1,4 +1,4 @@
-const CACHE_NAME = "doors-pwa-v7";
+const CACHE_NAME = "doors-pwa-v9";
 const APP_FILES = [
   "./",
   "./index.html",
