@@ -1,4 +1,5 @@
-const CACHE_NAME = "doors-pwa-v9";
+const CACHE_NAME = "doors-pwa-v10";
+
 const APP_FILES = [
   "./",
   "./index.html",
@@ -13,44 +14,56 @@ const APP_FILES = [
   "./icons/icon-512.png",
 ];
 
-// Предварительно кэширует оболочку приложения для офлайн-работы.
+// Предварительно сохраняет файлы приложения.
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES)),
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(APP_FILES);
+    }),
   );
+
+  // Новая версия не ждёт закрытия старой.
   self.skipWaiting();
 });
 
-// Удаляет старые версии кэша после обновления приложения.
+// Удаляет старые версии кэша.
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((key) => key !== CACHE_NAME)
-            .map((key) => caches.delete(key)),
-        ),
-      ),
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key)),
+      );
+    }),
   );
+
+  // Новый worker сразу начинает
+  // управлять открытыми страницами.
   self.clients.claim();
 });
 
-// Сначала использует кэш, затем сеть и сохраняет успешный ответ.
+// Для файлов приложения сначала используется сеть.
+// Если сеть недоступна — используется кэш.
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  if (event.request.method !== "GET") {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then(
-      (cached) =>
-        cached ||
-        fetch(event.request).then((response) => {
-          const copy = response.clone();
-          caches
-            .open(CACHE_NAME)
-            .then((cache) => cache.put(event.request, copy));
-          return response;
-        }),
-    ),
+    fetch(event.request)
+      .then((response) => {
+        const copy = response.clone();
+
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, copy);
+        });
+
+        return response;
+      })
+
+      .catch(() => {
+        return caches.match(event.request);
+      }),
   );
 });
