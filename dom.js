@@ -12,7 +12,7 @@ const Dom = (() => {
       key: "zone",
       label: "Зона",
       type: "select",
-      options: ["", "Офисное здание", "Цех"],
+      options: ["", "Офисное здание", "Цех", "Другие здания"],
     },
     {
       key: "floor",
@@ -48,6 +48,7 @@ const Dom = (() => {
       "search-input",
       "status-filter",
       "zone-filter",
+      "floor-filter",
       "notes-filter",
       "add-door-button",
       "app-version",
@@ -141,6 +142,14 @@ const Dom = (() => {
       }
 
       summary.append(heading, statusWrap);
+
+      // Notes всегда видны в шапке карточки, даже когда она свернута.
+      if ((door.notes || "").trim()) {
+        const notesPreview = document.createElement("p");
+        notesPreview.className = "door-notes-preview";
+        notesPreview.textContent = door.notes;
+        summary.append(notesPreview);
+      }
 
       // Остальные параметры и действия показываются после раскрытия карточки.
       const body = document.createElement("div");

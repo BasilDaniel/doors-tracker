@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "1.9.0";
+  const APP_VERSION = "1.10.0";
 
   let doors = Storage.load();
   let selectedFile = null;
@@ -12,6 +12,7 @@
       .toLocaleLowerCase("ru");
     const status = Dom.elements["status-filter"].value;
     const zone = Dom.elements["zone-filter"].value;
+    const floor = Dom.elements["floor-filter"].value;
     const notes = Dom.elements["notes-filter"].value;
 
     return doors.filter((door) => {
@@ -23,11 +24,18 @@
 
       const matchesStatus = status === "all" || (door.status || "") === status;
       const matchesZone = zone === "all" || (door.zone || "") === zone;
+      const matchesFloor = floor === "all" || (door.floor || "") === floor;
       const hasNotes = Boolean((door.notes || "").trim());
       const matchesNotes =
         notes === "all" || (notes === "with" ? hasNotes : !hasNotes);
 
-      return matchesSearch && matchesStatus && matchesZone && matchesNotes;
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesZone &&
+        matchesFloor &&
+        matchesNotes
+      );
     });
   }
 
@@ -173,6 +181,7 @@
     Dom.elements["search-input"].addEventListener("input", render);
     Dom.elements["status-filter"].addEventListener("change", render);
     Dom.elements["zone-filter"].addEventListener("change", render);
+    Dom.elements["floor-filter"].addEventListener("change", render);
     Dom.elements["notes-filter"].addEventListener("change", render);
     Dom.elements["add-door-button"].addEventListener("click", () =>
       Dom.openDoorDialog(),

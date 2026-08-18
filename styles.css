@@ -112,7 +112,7 @@ button {
 }
 .filters-panel {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) repeat(3, minmax(160px, 220px));
+  grid-template-columns: minmax(260px, 1fr) repeat(4, minmax(150px, 210px));
   gap: 14px;
   align-items: end;
   margin-bottom: 22px;
@@ -247,6 +247,16 @@ textarea:focus {
   color: var(--muted);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.door-notes-preview {
+  grid-column: 1 / -1;
+  margin: -4px 0 0;
+  padding: 8px 10px;
+  color: var(--text);
+  background: #fff8e6;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  white-space: pre-wrap;
 }
 .door-status {
   justify-self: end;
