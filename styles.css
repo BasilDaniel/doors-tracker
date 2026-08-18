@@ -248,15 +248,14 @@ textarea:focus {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.door-notes-preview {
-  grid-column: 1 / -1;
-  margin: -4px 0 0;
-  padding: 8px 10px;
-  color: var(--text);
-  background: #fff8e6;
-  border-radius: 8px;
+.door-summary-notes {
+  margin-top: 6px !important;
+  color: var(--text) !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
   font-size: 0.86rem;
-  white-space: pre-wrap;
+  line-height: 1.35;
 }
 .door-status {
   justify-self: end;
@@ -306,15 +305,6 @@ textarea:focus {
 .door-empty-details {
   margin: 0;
   color: var(--muted);
-}
-.door-notes {
-  flex-basis: 100%;
-  margin: 4px 0 0;
-  padding: 10px 12px;
-  color: var(--text);
-  background: #fff8e6;
-  border-radius: 8px;
-  white-space: pre-wrap;
 }
 .card-actions {
   display: flex;

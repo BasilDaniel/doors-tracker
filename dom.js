@@ -131,25 +131,15 @@ const Dom = (() => {
       statusWrap.className = "door-status-wrap";
       statusWrap.append(makeStatus(door.status));
 
-      // Если есть Notes, показывает предупреждение рядом со статусом.
+      // Notes показываются только в шапке карточки и видны даже в свернутом состоянии.
       if (door.notes) {
-        const noteMark = document.createElement("span");
-        noteMark.className = "notes-warning";
-        noteMark.textContent = "!";
-        noteMark.title = "Есть примечание";
-        noteMark.setAttribute("aria-label", "Есть примечание");
-        statusWrap.append(noteMark);
+        const notes = document.createElement("p");
+        notes.className = "door-summary-notes";
+        notes.textContent = door.notes;
+        heading.append(notes);
       }
 
       summary.append(heading, statusWrap);
-
-      // Notes всегда видны в шапке карточки, даже когда она свернута.
-      if ((door.notes || "").trim()) {
-        const notesPreview = document.createElement("p");
-        notesPreview.className = "door-notes-preview";
-        notesPreview.textContent = door.notes;
-        summary.append(notesPreview);
-      }
 
       // Остальные параметры и действия показываются после раскрытия карточки.
       const body = document.createElement("div");
@@ -168,14 +158,6 @@ const Dom = (() => {
           .map(makeTag)
           .filter(Boolean),
       );
-
-      // Notes выводятся отдельным блоком, чтобы длинный текст не смешивался с тегами.
-      if (door.notes) {
-        const notes = document.createElement("p");
-        notes.className = "door-notes";
-        notes.textContent = door.notes;
-        details.append(notes);
-      }
 
       if (!location.childElementCount && !details.childElementCount) {
         const emptyDetails = document.createElement("p");
