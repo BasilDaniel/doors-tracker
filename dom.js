@@ -6,7 +6,7 @@ const Dom = (() => {
       key: "status",
       label: "Статус",
       type: "select",
-      options: ["", "Готово", "Монтаж", "Тестирование"],
+      options: ["", "Готово", "Монтаж", "Тестирование", "Зависимость"],
     },
     {
       key: "zone",
@@ -87,6 +87,7 @@ const Dom = (() => {
     if (status === "Готово") return "status-ready";
     if (status === "Монтаж") return "status-installation";
     if (status === "Тестирование") return "status-testing";
+    if (status === "Зависимость") return "status-dependency";
     return "status-empty";
   }
 

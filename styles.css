@@ -277,6 +277,10 @@ textarea:focus {
   color: #1d4ed8;
   background: #dbeafe;
 }
+.status-dependency {
+  color: #6b21a8;
+  background: #f3e8ff;
+}
 .status-empty {
   color: #52606d;
   background: #edf1f4;

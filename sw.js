@@ -1,4 +1,4 @@
-const CACHE_NAME = "doors-pwa-v14";
+const CACHE_NAME = "doors-pwa-v15";
 
 const APP_FILES = [
   "./",
