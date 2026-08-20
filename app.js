@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "1.12.1";
+  const APP_VERSION = "1.12.3";
 
   let doors = Storage.load();
   let selectedFile = null;
