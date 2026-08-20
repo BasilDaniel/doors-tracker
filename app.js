@@ -208,6 +208,7 @@
       .getElementById("filters-toggle")
       .addEventListener("click", toggleFilters);
     Dom.elements["search-input"].addEventListener("input", render);
+    Dom.elements["module-search"].addEventListener("input", render);
     Dom.elements["status-filter"].addEventListener("change", render);
     Dom.elements["zone-filter"].addEventListener("change", render);
     Dom.elements["floor-filter"].addEventListener("change", render);
