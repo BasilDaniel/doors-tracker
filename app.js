@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "1.11.0";
+  const APP_VERSION = "1.11.1";
 
   let doors = Storage.load();
   let selectedFile = null;
@@ -16,10 +16,28 @@
     const notes = Dom.elements["notes-filter"].value;
 
     return doors.filter((door) => {
+      // Поиск выполняется по основным полям двери, включая модуль.
+      const searchValues = [
+        door.dk,
+        door.designation,
+        door.status,
+        door.zone,
+        door.floor,
+        door.access,
+        door.lock,
+        door.latch,
+        door.mode,
+        door.panic,
+        door.notes,
+        door.module,
+      ];
+
       const matchesSearch =
         !query ||
-        Object.values(door).some((value) =>
-          String(value).toLocaleLowerCase("ru").includes(query),
+        searchValues.some((value) =>
+          String(value || "")
+            .toLocaleLowerCase("ru")
+            .includes(query),
         );
 
       const matchesStatus = status === "all" || (door.status || "") === status;
