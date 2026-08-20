@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "1.11.1";
+  const APP_VERSION = "1.12.1";
 
   let doors = Storage.load();
   let selectedFile = null;
@@ -16,7 +16,7 @@
     const notes = Dom.elements["notes-filter"].value;
 
     return doors.filter((door) => {
-      // Поиск выполняется по основным полям двери, включая модуль.
+      // Общий поиск не учитывает поле "Модуль".
       const searchValues = [
         door.dk,
         door.designation,
@@ -29,7 +29,6 @@
         door.mode,
         door.panic,
         door.notes,
-        door.module,
       ];
 
       const matchesSearch =
@@ -40,6 +39,17 @@
             .includes(query),
         );
 
+      // Модуль ищется отдельно своим полем.
+      const moduleQuery = Dom.elements["module-search"].value
+        .trim()
+        .toLocaleLowerCase("ru");
+
+      const matchesModule =
+        !moduleQuery ||
+        String(door.module || "")
+          .toLocaleLowerCase("ru")
+          .includes(moduleQuery);
+
       const matchesStatus = status === "all" || (door.status || "") === status;
       const matchesZone = zone === "all" || (door.zone || "") === zone;
       const matchesFloor = floor === "all" || (door.floor || "") === floor;
@@ -49,6 +59,7 @@
 
       return (
         matchesSearch &&
+        matchesModule &&
         matchesStatus &&
         matchesZone &&
         matchesFloor &&
