@@ -36,6 +36,7 @@ const Dom = (() => {
     },
     { key: "panic", label: "Паника / эвакуация", wide: true },
     { key: "notes", label: "Notes", type: "textarea", wide: true },
+    { key: "module", label: "Модуль" },
   ];
 
   const elements = {};
@@ -155,7 +156,14 @@ const Dom = (() => {
       const details = document.createElement("div");
       details.className = "door-details";
       details.append(
-        ...[door.access, door.lock, door.latch, door.mode, door.panic]
+        ...[
+          door.access,
+          door.lock,
+          door.latch,
+          door.mode,
+          door.panic,
+          door.module,
+        ]
           .map(makeTag)
           .filter(Boolean),
       );

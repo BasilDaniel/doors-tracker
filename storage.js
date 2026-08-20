@@ -3,7 +3,12 @@ const Storage = (() => {
 
   // Добавляет новые поля старым записям без потери локальных данных.
   function normalize(doors) {
-    return doors.map((door) => ({ status: "", notes: "", ...door }));
+    return doors.map((door) => ({
+      status: "",
+      notes: "",
+      module: "",
+      ...door,
+    }));
   }
 
   // Возвращает сохранённый массив или исходные данные при первом запуске.
